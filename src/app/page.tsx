@@ -21,7 +21,7 @@ import {
 } from "recharts"
 
 // ⬆️⬇️ Icons for up/down buttons
-import { ChevronUp, ChevronDown } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 // Color themes 
 import colors from "../../colors"
@@ -151,33 +151,30 @@ export default function Home() {
 
           
 
-          {/* 📈 Chart area */}
-          <div className="relative flex justify-center items-center">
+          {/* 📈 Chart area with buttons inside */}
+          <div className="relative w-full h-[500px] flex items-center justify-center">
 
-            {/* ➡️⬅️ X-axis (horizontal) zoom buttons */}
-            <div className="absolute bottom-[-40px] flex items-center gap-2">
-              {/* More years */}
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                whileHover={{ boxShadow: "0px 0px 10px #f5c542" }}
-                transition={{ type: "spring", stiffness: 300 }}
-                className="bg-[#008db9] hover:bg-yellow-400 text-[#23282a] rounded-full p-2 shadow-md transition-all"
-                onClick={() => setNumYears((prev) => Math.min(prev + 1, 10))}
-              >
-                <ChevronUp className="h-5 w-5" />
-              </motion.button>
+            {/* 📉 Zoom In (Fewer years) */}
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              whileHover={{ boxShadow: "0px 0px 10px #f5c542" }}
+              transition={{ type: "spring", stiffness: 300 }}
+              className="absolute left-2 bottom-8 z-10 bg-[#008db9] hover:bg-yellow-400 text-[#23282a] rounded-full p-2 shadow-md transition-all"
+              onClick={() => setNumYears((prev) => Math.max(prev - 1, 1))}
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </motion.button>
 
-              {/* Fewer years */}
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                whileHover={{ boxShadow: "0px 0px 10px #f5c542" }}
-                transition={{ type: "spring", stiffness: 300 }}
-                className="bg-[#008db9] hover:bg-yellow-400 text-[#23282a] rounded-full p-2 shadow-md transition-all"
-                onClick={() => setNumYears((prev) => Math.max(prev - 1, 1))}
-              >
-                <ChevronDown className="h-5 w-5" />
-              </motion.button>
-            </div>
+            {/* 📈 Zoom Out (More years) */}
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              whileHover={{ boxShadow: "0px 0px 10px #f5c542" }}
+              transition={{ type: "spring", stiffness: 300 }}
+              className="absolute right-2 bottom-8 z-10 bg-[#008db9] hover:bg-yellow-400 text-[#23282a] rounded-full p-2 shadow-md transition-all"
+              onClick={() => setNumYears((prev) => Math.min(prev + 1, 10))}
+            >
+              <ChevronRight className="h-5 w-5" />
+            </motion.button>
 
             {/* 📊 The actual chart */}
             <motion.div
