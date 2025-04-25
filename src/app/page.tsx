@@ -1,8 +1,15 @@
-"use client"
+"use client" // 🧠 This tells Next.js: this page needs to run on the client side (browser).
 
+// 📦 Import React Hooks
 import { useState } from "react"
+
+// 🧱 UI Components
 import { Card, CardContent } from "@/components/ui/card"
+
+// 🎬 Animation Library
 import { motion } from "framer-motion"
+
+// 📈 Chart Components
 import {
   LineChart,
   Line,
@@ -12,46 +19,53 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts"
+
+// ⬆️⬇️ Icons for up/down buttons
 import { ChevronUp, ChevronDown } from "lucide-react"
 
-const colors = {
-  primaryBlue: "#0554F2",
-  deepGreen: "#052608",
-  mossGreen: "#76A646",
-  limeGlow: "#BDF26D",
-  softIvory: "#EFF2EB",
-}
+// Color themes 
+import colors from "../../colors"
 
+// 🧠 Define possible fixes and their effects
 const fixEffects = {
-  "fix-1": 0.05,
-  "fix-2": -0.03,
-  "fix-3": 0.1,
+  "fix-1": 0.05,  // +5% effect
+  "fix-2": -0.03, // -3% effect
+  "fix-3": 0.10,  // +10% effect
 }
-
+// Button configuration
 const buttons = [
-  { id: "fix-1", label: "Fire CEO", description: "Description 1: +5% effect" },
-  { id: "fix-2", label: "Downsizing", description: "Description 2: -3% effect" },
-  { id: "fix-3", label: "Training", description: "Description 3: +10% effect" },
-]
+  {
+    id: "fix-1",
+    label: "Fire CEO",
+    description: "Description 1: +5% effect"
+  },
+  {
+    id: "fix-2",
+    label: "Downsizing",
+    description: "Description 2: -3% effect"
+  },
+  {
+    id: "fix-3",
+    label: "Training",
+    description: "Description 3: +10% effect"
+  }
+];
 
-// ✅ Custom Tooltip showing x and y
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (!active || !payload || !payload.length) return null
-
-  return (
-    <div className="p-2 rounded-md shadow-md bg-[#EFF2EB] text-[#052608] text-xs font-medium border border-[#76A646]">
-      <p>x: {label}</p>
-      <p>y: {payload[0].value}</p>
-    </div>
-  )
-}
-
+// 🏠 The main Home page
 export default function Home() {
+  // 🗃️ State to track which fixes are active
   const [activeFixes, setActiveFixes] = useState<string[]>([])
+
+  // State for active button
   const [activeDescriptions, setActiveDescriptions] = useState<string[]>([])
+
+  // 🗓️ State for number of years shown in the chart
   const [numYears, setNumYears] = useState(4)
+
+  // 📏 State for Y-axis scaling (vertical scaling of the graph)
   const [yScale, setYScale] = useState(100)
 
+  // 🔁 Toggle a fix (add/remove from activeFixes)
   const toggleFix = (fix: string) => {
     setActiveFixes((prev) =>
       prev.includes(fix) ? prev.filter((f) => f !== fix) : [...prev, fix]
@@ -65,91 +79,107 @@ export default function Home() {
     )
   }
 
+  // 🔄 Reset all fixes (clear activeFixes)
   const resetFixes = () => {
     setActiveFixes([])
     setActiveDescriptions([])
   }
 
+  // ➕ Sum up the total adjustment from active fixes
   const totalAdjustment = activeFixes.reduce(
     (sum, fix) => sum + (fixEffects[fix as keyof typeof fixEffects] || 0),
     0
   )
 
+  // 📊 Base data without any adjustments
   const baseData = Array.from({ length: numYears }, (_, i) => ({
     year: i + 1,
     value: yScale + i * (80 + numYears * 5),
   }))
 
+  // 📈 Adjusted data based on selected fixes
   const adjustedData = baseData.map((d) => ({
     year: d.year,
     value: d.value * (1 + totalAdjustment),
   }))
 
+  // 🖥️ Return the page layout
   return (
     <motion.main
       className="min-h-screen flex items-center justify-center p-8"
-      style={{ backgroundColor: colors.softIvory }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      style={{ backgroundColor: colors.lightGray }}
+      initial={{ opacity: 0 }}   // 👻 Start hidden
+      animate={{ opacity: 1 }}   // 🎥 Fade in
       transition={{ duration: 1 }}
     >
-      <Card className="w-full max-w-6xl shadow-xl rounded-2xl border-0" style={{ backgroundColor: colors.softIvory }}>
+      {/* 🎴 Main card container */}
+      <Card className="w-full max-w-6xl shadow-xl rounded-2xl border-0"style={{ backgroundColor: colors.lightBlue }}>
         <CardContent className="py-4 px-6 relative">
 
-          {/* Fix Buttons */}
+          {/* 🛠️ Fix buttons and Reset button */}
           <div className="flex flex-wrap justify-center items-center gap-2 mb-4">
+            {/* 🔘 Buttons for each fix */}
             {buttons.map((btn) => (
-              <div key={btn.id} className="flex flex-col items-center">
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
-                  whileHover={{ boxShadow: "0px 0px 10px #BDF26D" }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                  onClick={() => handleFixClick(btn.id)}
-                  className={`text-xs font-semibold px-3 py-1 rounded-full transition-all tracking-wide shadow-md ${
-                    activeFixes.includes(btn.id)
-                      ? "bg-[#BDF26D] text-[#052608] ring-2 ring-[#76A646]"
-                      : "bg-[#0554F2] text-white hover:bg-[#052608] hover:text-[#EFF2EB]"
-                  }`}
-                >
-                  {btn.label}
-                </motion.button>
-              </div>
-            ))}
+              <div key={btn.id} className="flex flex-col items-center w-16">
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                whileHover={{ boxShadow: "0px 0px 10px #f5c542" }}
+                transition={{ type: "spring", stiffness: 300 }}
+                onClick={() => handleFixClick(btn.id)}
+                className={`w-flex h-7 text-xs font-medium rounded-lg px-1 transition-all tracking-wide ${
+                  activeFixes.includes(btn.id)
+                    ? "bg-yellow-400 text-black ring-2 ring-yellow-300"
+                    : "bg-[#00546f] text-[#e9e9e9] hover:bg-black hover:text-white"
+                }`}
+              >
+                {btn.label}
+              </motion.button>
+            </div>
+          ))}
 
+            {/* 🔁 Reset button */}
             <motion.button
               whileTap={{ scale: 0.95 }}
-              whileHover={{ boxShadow: "0px 0px 10px #76A646" }}
+              whileHover={{ boxShadow: "0px 0px 10px #f5c542" }}
               transition={{ type: "spring", stiffness: 300 }}
               onClick={resetFixes}
-              className="h-7 text-sm px-4 font-semibold rounded-lg bg-[#76A646] text-[#052608] hover:bg-[#BDF26D] hover:text-black transition-all"
+              className="h-7 text-sm px-4 font-semibold rounded-lg bg-[#00546f] text-[#e9e9e9] hover:bg-black hover:text-yellow-400 border-none transition-all"
             >
               Reset
             </motion.button>
           </div>
 
-          {/* Chart */}
+          
+
+          {/* 📈 Chart area */}
           <div className="relative flex justify-center items-center">
+
+            {/* ➡️⬅️ X-axis (horizontal) zoom buttons */}
             <div className="absolute bottom-[-40px] flex items-center gap-2">
+              {/* More years */}
               <motion.button
                 whileTap={{ scale: 0.9 }}
-                whileHover={{ boxShadow: "0px 0px 10px #BDF26D" }}
+                whileHover={{ boxShadow: "0px 0px 10px #f5c542" }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="bg-[#0554F2] hover:bg-[#76A646] text-white rounded-full p-2 shadow-lg transition-all"
+                className="bg-[#008db9] hover:bg-yellow-400 text-[#23282a] rounded-full p-2 shadow-md transition-all"
                 onClick={() => setNumYears((prev) => Math.min(prev + 1, 10))}
               >
                 <ChevronUp className="h-5 w-5" />
               </motion.button>
+
+              {/* Fewer years */}
               <motion.button
                 whileTap={{ scale: 0.9 }}
-                whileHover={{ boxShadow: "0px 0px 10px #BDF26D" }}
+                whileHover={{ boxShadow: "0px 0px 10px #f5c542" }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="bg-[#0554F2] hover:bg-[#76A646] text-white rounded-full p-2 shadow-lg transition-all"
+                className="bg-[#008db9] hover:bg-yellow-400 text-[#23282a] rounded-full p-2 shadow-md transition-all"
                 onClick={() => setNumYears((prev) => Math.max(prev - 1, 1))}
               >
                 <ChevronDown className="h-5 w-5" />
               </motion.button>
             </div>
 
+            {/* 📊 The actual chart */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -159,95 +189,86 @@ export default function Home() {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={adjustedData}
-                  style={{ backgroundColor: "#052608", borderRadius: "14px" }}
-                  margin={{ top: 30, right: 15, left: 15, bottom: 50 }}
+                  style={{ backgroundColor: "#008db9", borderRadius: "12px" }}
+                  margin={{
+                    top: 30,
+                    right: 15,
+                    left: -5,
+                    bottom: 5,}}
                 >
-                  <CartesianGrid stroke="#BDF26D" strokeDasharray="3 3" />
+                  {/* 🧱 Chart grid */}
+                  <CartesianGrid stroke="#ffffff" strokeDasharray="3 3"/>
+
+                  {/* 📅 X Axis */}
                   <XAxis
+                    type="number"
                     dataKey="year"
                     domain={[1, numYears]}
                     tickCount={numYears}
-                    stroke="#EFF2EB"
+                    stroke="#d6c2f7"
                     label={{
                       value: "Years",
-                      position: "insideBottom",
-                      offset: -10,
-                      fill: "#EFF2EB",
-                      fontSize: 16,
-                      dx: -20,
+                      position: "left",
+                      offset: 10,
+                      fill: "#23282a",
+                      
                     }}
-                    tick={{ fontSize: 14, fill: "#EFF2EB" }}
+                    tick={{ fontSize: 16, fill: "#d6c2f7" }}
                   />
+
+                  {/* 🔼 Y Axis */}
                   <YAxis
                     type="number"
                     domain={[0, "auto"]}
-                    stroke="#EFF2EB"
+                    stroke="#d6c2f7"
                     label={{
                       value: "Projection (%)",
-                      angle: -90,
-                      position: "insideLeft",
-                      offset: -5,
-                      dy: 30,
-                      fill: "#EFF2EB",
-                      fontSize: 16,
+                      position: "top",
+                      offset: 10,
+                      dx: 35,
+                      dy: -5,
+                      fill: "#23282a",
                     }}
-                    tick={{ fontSize: 14, fill: "#EFF2EB" }}
+                    tick={{ fontSize: 16, fill: "#d6c2f7" }}
                   />
-                  <Tooltip content={<CustomTooltip />} />
+
+                  {/* 🪄 Tooltip on hover */}
+                  <Tooltip
+                    contentStyle={{ backgroundColor: "#2f0a43", border: "1px solid #6a0dad", color: "#ffffff", fontSize: 16}}
+                    itemStyle={{ color: "#ffffff" }}
+                  />
+
+                  {/* 📈 The line */}
                   <Line
                     type="monotone"
                     dataKey="value"
-                    stroke="#BDF26D"
+                    stroke="#ffffff"
                     strokeWidth={3}
-                    activeDot={{ r: 6, fill: "#BDF26D", stroke: "#76A646" }}
-                    dot={{ r: 4, fill: "#76A646" }}
+                    activeDot={{ r: 8, fill: "#c084fc", stroke: "#c084fc" }}
+                    dot={{ r: 4, fill: "#c084fc", stroke: "#c084fc" }}
                     animationDuration={1000}
                   />
                 </LineChart>
               </ResponsiveContainer>
             </motion.div>
+
           </div>
 
-          {/* Fix Description (inline color-coded %) */}
+         {/* Description Window */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="w-full bg-[#EFF2EB] text-[#052608] rounded-xl p-4 mt-6 shadow-md"
+            className="w-full bg-white/80 text-[#23282a] rounded-xl p-4 mb-4 shadow-md"
           >
             <h3 className="text-md font-bold mb-2">Fixes Applied:</h3>
             {activeDescriptions.length > 0 ? (
               <ul className="list-disc pl-5 space-y-1 text-sm">
                 {buttons
                   .filter((btn) => activeDescriptions.includes(btn.id))
-                  .map((btn) => {
-                    const description = btn.description
-                    const match = description.match(/([+-]\d+%?)/)
-                    if (!match) return <li key={btn.id}>{description}</li>
-
-                    const [value] = match
-                    const isPositive = value.startsWith("+")
-                    const isNegative = value.startsWith("-")
-                    const parts = description.split(value)
-
-                    return (
-                      <li key={btn.id}>
-                        {parts[0]}
-                        <span
-                          className={`font-bold ${
-                            isPositive
-                              ? "text-green-600"
-                              : isNegative
-                              ? "text-red-600"
-                              : ""
-                          }`}
-                        >
-                          {value}
-                        </span>
-                        {parts[1]}
-                      </li>
-                    )
-                  })}
+                  .map((btn) => (
+                    <li key={btn.id}>{btn.description}</li>
+                  ))}
               </ul>
             ) : (
               <p className="text-sm italic">No fixes selected.</p>
