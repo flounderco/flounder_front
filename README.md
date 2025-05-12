@@ -92,5 +92,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 For questions or support, please open an issue on the repository.
 
 ---
-
-*This README was generated to provide a clear overview and quick start for developers and users interested in the flounder_front project.*
